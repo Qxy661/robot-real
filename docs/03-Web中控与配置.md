@@ -96,3 +96,11 @@ Web 中控已有：建图/导航/地图保存/摇杆
 
 ---
 *实机 Web 中控研究。配合飞书手册使用。*
+
+---
+## 🙏 开源致谢
+
+本文档基于以下开源项目研究：
+- [LEAP_ROS 开源机器人（czu963889306-dev）](https://github.com/czu963889306-dev/-ros2-)
+- [ROS2 Web 中控台（czu963889306-dev/ros2_web）](https://github.com/czu963889306-dev/ros2_web)
+- [micro-ROS](https://micro.ros.org) / [ROS2 Humble](https://docs.ros.org/en/humble/) / [Nav2](https://docs.nav2.org/)
