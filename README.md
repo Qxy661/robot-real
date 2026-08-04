@@ -66,6 +66,29 @@ M5 导航 → 实机 Nav2（行动）
 M6 控制 → micro-ROS（执行）
 ```
 
+## 🙏 开源贡献致谢（参考文献）
+
+本项目基于以下开源项目构建，在此衷心致谢原作者的贡献：
+
+### 1. LEAP_ROS 开源机器人
+- **作者**：出云科技（czu963889306-dev）
+- **仓库**：[czu963889306-dev/-ros2-](https://github.com/czu963889306-dev/-ros2-)
+- **贡献**：ESP32 micro-ROS 控制板固件、ROS2 上位机栈（导航/SLAM/摄像头）、硬件设计（原理图/BOM/3D外壳）
+- **用途**：本项目实机小车的基础平台
+
+### 2. ROS2 Web 中控台（ros2_web）
+- **作者**：czu963889306-dev
+- **仓库**：[czu963889306-dev/ros2_web](https://github.com/czu963889306-dev/ros2_web)
+- **贡献**：Vue Web 机器人中控台（地图显示/摇杆控制/建图管理/Foxglove 桥接）
+- **用途**：本项目的 Web 控制界面
+
+### 3. 相关开源生态
+- **micro-ROS**：嵌入式 ROS2 轻量化方案（[micro.ros.org](https://micro.ros.org)）
+- **ROS2 Humble** + **Nav2** + **Cartographer**：机器人的标准框架
+
+> 本项目的三任务（巡检/巡逻/语音）与 YOLO/VLA 扩展，是基于上述开源平台的**二次开发与创新**，所有成果回馈开源社区。
+
 ## License
 
 MIT
+
