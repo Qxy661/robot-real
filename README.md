@@ -1,16 +1,41 @@
 # 实机小车 · LEAP ROS2 真机项目 🤖
 
 > 基于 LEAP ROS2 开源小车（已购实机）的真机落地项目。
-> 把 M2 检测、M5 导航、M6 控制、micro-ROS 底层在**真实机器人**上体现。
-> 价值：从"仿真"到"真机"的完整闭环（作品集最强信号）。
+> **从仿真到真机**——把 M2 检测、M5 导航、M6 控制、micro-ROS 底层在真实机器人上体现。
+> 价值：完整闭环（感知→规划→执行→决策）在真机跑通。
 
-## 🎯 三个 IDEA（按序实施）
+## 🎯 三任务递进（作品集核心）
 
-| IDEA | 内容 | 串联能力 | 状态 |
+```
+能做事（IDEA 1 巡检）→ 会自主（IDEA 2 巡逻）→ 懂人话（IDEA 3 语音）
+```
+
+| 任务 | 内容 | 串联能力 | 状态 |
 |---|---|---|---|
-| **1. 语音指挥小车** | 语音→ASR→VLA理解→执行→TTS反馈 | M2/M3/M5/底层 | 🔄 规划 |
-| **2. 多能力矩阵** | 实机YOLO/导航/micro-ROS/PID + 对比 | M2/M5/M6 | ⏳ |
-| **3. 多机协同** | Agent池，PC一控多 | micro-ROS进阶 | ⏳ |
+| **1. 室内目标巡检** | 建图→指令→导航→YOLO确认→报告 | 建图/导航/检测/决策 | 🔄 规划 |
+| **2. 自主避障巡逻** | 自主巡逻→动态避障→异常检测→报告 | 导航/避障/检测/控制 | ⏳ |
+| **3. 语音指令控制** | 语音→VLA理解→导航→检测 | VLA/导航/检测/交互 | ⏳ |
+
+## 📂 项目结构
+
+```
+robot-real/
+├── README.md              # 门面（三任务 + 能力）
+├── mission/               # 三任务（递进）
+│   ├── 01_target_inspection/   # 室内目标巡检
+│   ├── 02_patrol_avoidance/    # 自主避障巡逻
+│   └── 03_voice_command/       # 语音指令控制
+├── capabilities/          # 能力模块（任务基础）
+│   ├── slam/              # 建图定位
+│   ├── navigation/        # 导航避障
+│   ├── vision/            # YOLO 检测
+│   ├── control/           # micro-ROS 控制
+│   └── interaction/       # 语音交互（ASR/TTS/VLA）
+├── gui/                   # GUI 仪表盘（实时视频/标注/传感器）
+├── microros/              # micro-ROS 知识体系
+├── multi_robot/           # 多机协同（扩展）
+└── docs/                  # 实机部署教程
+```
 
 ## 🏆 实机能力（已研究确认）
 
@@ -18,47 +43,27 @@
 感知：激光雷达(SLAM) + 摄像头(MJPEG→PC YOLO) + IMU
 执行：电机 + 编码器 + PID
 通信：micro-ROS(ESP32↔PC) + WiFi MJPEG(图像)
-上层：PC 跑 ROS2（导航/视觉/规划/决策）
-```
-
-## 📂 项目结构
-
-```
-robot-real/
-├── README.md              # 本文件（门面）
-├── voice_command/         # IDEA 1：语音指挥小车
-│   ├── asr/               # 语音识别
-│   ├── vla/               # VLA 指令理解
-│   ├── execute/           # 任务执行
-│   └── tts/               # 语音反馈
-├── capabilities/          # IDEA 2：多能力矩阵
-│   ├── vision/            # 实机 YOLO
-│   ├── navigation/        # 实机导航
-│   └── control/           # PID 控制
-├── multi_robot/           # IDEA 3：多机协同
-├── microros/              # micro-ROS 知识体系（完成）
-└── docs/                  # 实机部署教程
+上层：PC 跑 ROS2（导航/视觉/规划/决策/语音）
 ```
 
 ## 🚀 实机操作路径
 
 ```
-1. 熟悉 LEAP（固件/协议/飞书文档）
+1. 熟悉 LEAP（固件/协议）
 2. 跑通 micro-ROS（Agent↔Client）
 3. 实机 YOLO 检测（摄像头流）
 4. 实机 SLAM 导航（激光雷达）
-5. IDEA 1：语音指挥小车（端到端）
-6. IDEA 2：多能力矩阵
-7. IDEA 3：多机协同
+5. IDEA 1 巡检 → IDEA 2 巡逻 → IDEA 3 语音
+6. GUI 仪表盘（整合展示）
 ```
 
 ## 🔗 与主线融合
 
 ```
-M2 检测 → 实机 YOLO
-M3 VLA → 语音指令理解
-M5 导航 → 实机 Nav2
-M6 控制 → micro-ROS 执行
+M2 检测 → 实机 YOLO（找目标）
+M3 VLA → 语音指令理解（听指挥）
+M5 导航 → 实机 Nav2（行动）
+M6 控制 → micro-ROS（执行）
 ```
 
 ## License
