@@ -1,7 +1,9 @@
-# micro-ROS 实机交接文档（Ubuntu 执行）
+# LEAP 实机落地 · Ubuntu 交接文档
 
 > **给 Ubuntu 环境的 Claude 的交接说明。** 在 Ubuntu 真机环境（有 micro-ROS + ROS2 Humble）完成 LEAP 小车实机落地。
-> 本文档从 Windows 侧交接，目标：实机到手后按此执行。
+> 本文档从 Windows 侧交接，覆盖全部阶段（micro-ROS → 仿真 → 实机导航 → 三任务）。实机到手后按此执行。
+
+## 📌 交接背景
 
 ## 📌 交接背景
 
@@ -21,7 +23,8 @@ ESP32（leap_low）通过 micro-ROS 与上位机通信，跑通 `/odom` `/imu` `
 source /opt/ros/humble/setup.bash
 ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
 
-# 2. 编译并启动 xuegeros_ws（LEAP 源码，含运动/雷达/建图/导航）
+# 2. 编译并启动 xuegeros_ws（LEAP 实机源码，含运动/雷达/建图/导航）
+#    ⚠️ xuegeros_ws 是 LEAP 实机源码，在 Ubuntu 真机侧（非 WSL）
 cd ~/xuegeros_ws
 colcon build --symlink-install
 source install/setup.bash
@@ -93,21 +96,29 @@ ros2 launch xuegecar_navigation2 navigation2.launch.py map:=~/map/room.yaml
 
 ## 🎯 阶段 3：目标巡检（串联三能力）
 
+> **视觉方案**：先用 PC 端 `detector.py`（Windows 已准备，验证过），K230 边缘 AI 为**可选增强**（docs/04）。
+
 用 Windows 侧已准备的 `detector.py` + ROS2 桥接，实现"导航→检测确认→报告"：
 
 ```bash
-# 摄像头 MJPEG 流 → YOLO 检测（conda dl 环境）
+# 1. 摄像头 MJPEG 流 → YOLO 检测（conda dl 环境）
+#    detector.py 在 robot-real/capabilities/vision/
 python capabilities/vision/detector.py \
     --mjpeg http://<ESP32摄像头IP>:8080/?action=stream \
     --model /path/to/best.pt
 
-# 检测结果 → 导航决策（巡检任务逻辑）
+# 2. 检测结果 → ROS2 桥接 → 导航决策（巡检任务逻辑）
+#    检测 JSON 含目标类别/置信度/中心坐标，供导航选目标点
 ```
 
 ### 三任务递进
-1. **室内目标巡检**：建图→指令→导航→YOLO确认→报告
-2. **自主避障巡逻**：自主巡逻→动态避障→异常检测
-3. **语音指令控制**：语音→VLA理解→导航→检测
+| 任务 | 内容 | 串联能力 | 依赖 |
+|---|---|---|---|
+| 1. 室内目标巡检 | 建图→指令→导航→YOLO确认→报告 | 导航+检测+决策 | 阶段2 完成 |
+| 2. 自主避障巡逻 | 自主巡逻→动态避障→异常检测 | 导航+避障+检测 | 任务1 完成 |
+| 3. 语音指令控制 | 语音→VLA理解→导航→检测 | VLA+导航+检测 | 任务2 完成 |
+
+> 每个任务**串联前面全部能力**，从"能做事"到"懂人话"递进。
 
 ## 📁 已准备的能力（Windows 侧）
 

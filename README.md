@@ -46,6 +46,11 @@ robot-real/
 上层：PC 跑 ROS2（导航/视觉/规划/决策/语音）
 ```
 
+## 📋 Ubuntu 实机交接（必读）
+
+> **在 Ubuntu 环境执行实机落地，先读**：[microros/实机交接-ubuntu.md](microros/实机交接-ubuntu.md)
+> 含完整阶段（micro-ROS 通信 → 仿真验证 → 实机建图导航 → 三任务）的执行步骤、验证标准、常见问题。
+
 ## 🚀 实机操作路径
 
 ```
