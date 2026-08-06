@@ -43,7 +43,35 @@ ros2 topic echo /odom --once   # 应有数据
 | 雷达无数据 | socat：`socat udp:8889 /dev/lidar` 后启动 YDLIDAR 驱动 |
 | 话题无/odom | 确认 xuegecar_bringup 启动 + micro-ROS 通信正常 |
 
-## 🎯 阶段 2：建图导航（优先于三任务）
+## 🎯 阶段 2a：仿真先行验证（真机前必做）
+
+> **在 TurtleBot3 仿真里先跑通导航闭环**，再上真机。环境已在 WSL/Ubuntu 验证可用（Gazebo 11 + turtlebot3_simulations + Nav2 均安装，Gazebo 世界启动成功）。
+
+```bash
+# 1. 启动仿真世界（验证 Gazebo + 小车）
+export TURTLEBOT3_MODEL=burger
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+
+# 2. 建图（终端2）
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+
+# 3. 遥控走一圈（终端3）
+ros2 run turtlebot3_teleop turtlebot3_teleop_key
+
+# 4. 保存地图
+mkdir -p ~/map
+ros2 run nav2_map_server map_saver_cli -f ~/map/room
+
+# 5. Nav2 导航（终端4）
+ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=~/map/room.yaml
+# RViz 设 2D Goal Pose → 小车自主导航
+```
+
+**仿真验证标准**：地图轮廓正确 + 小车到达目标点。通过后再走真机路径（阶段2b）。
+
+## 🎯 阶段 2b：实机建图导航（真机到手后）
+
+> 用 LEAP 实机（xuegeros_ws 源码），流程与仿真同构。
 
 ```bash
 # 1. Cartographer 建图
